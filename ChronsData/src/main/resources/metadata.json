@@ -1,0 +1,14 @@
+{
+  "tables": [
+    {
+      "name": "orders",
+      "owner": "data_team",
+      "columns": ["id", "amount", "customer_id"]
+    },
+    {
+      "name": "customers",
+      "owner": "analytics_team",
+      "columns": ["id", "email", "phone"]
+    }
+  ]
+}
