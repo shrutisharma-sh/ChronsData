@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChronosData AI</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .container {
+            width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-right: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #3b82f6;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .chat {
+            margin-top: 10px;
+        }
+
+        .user {
+            text-align: right;
+            margin: 5px;
+        }
+
+        .bot {
+            text-align: left;
+            margin: 5px;
+            color: #38bdf8;
+        }
+
+        .response {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>ChronosData AI</h2>
+
+    <div class="box">
+        <h3>Ask your data</h3>
+
+        <input type="text" id="query" placeholder="Ask something..." />
+        <button onclick="ask()">Ask</button>
+
+        <div class="chat" id="chatBox"></div>
+    </div>
+
+    <div class="box">
+        <h3>Validate Metadata</h3>
+
+        <input type="text" id="table" placeholder="Table name" />
+        <input type="text" id="owner" placeholder="Owner" />
+        <button onclick="validate()">Validate</button>
+
+        <p class="response" id="validationResponse"></p>
+    </div>
+
+</div>
+
+<script>
+
+    function ask() {
+        const query = document.getElementById("query").value;
+
+        document.getElementById("chatBox").innerHTML +=
+            `<div class="user">You: ${query}</div>`;
+
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: query
+        })
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("chatBox").innerHTML +=
+                `<div class="bot">AI: ${data}</div>`;
+        });
+    }
+
+    function validate() {
+        const table = document.getElementById("table").value;
+        const owner = document.getElementById("owner").value;
+
+        fetch('/api/validate-metadata', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table, owner })
+        })
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("validationResponse").innerText = data;
+        });
+    }
+
+</script>
+
+</body>
+</html>
