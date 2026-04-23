@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+
+  chronosdata-ai:
+    build: .
+    container_name: chronosdata-container
+
+    ports:
+      - "9090:8080"
+
+    environment:
+      OPENAI_API_KEY: dummy

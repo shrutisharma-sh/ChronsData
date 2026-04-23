@@ -40,20 +40,60 @@ public class ChatController {
     @PostMapping("/validate-metadata")
     public String validateMetadata(@RequestBody MetadataRequest request) {
 
-        if(request.getTable() == null || request.getTable().isEmpty()) {
+        int score = 100;
 
-            String explanation = aiService.explainIssue("Missing table name");
+        StringBuilder result = new StringBuilder();
 
-            return "Deployment Blocked: Table name missing\n " + explanation;
+
+        if (request.getTable() == null || request.getTable().isEmpty()) {
+
+            score -= 50;
+
+            String explanation =
+                    aiService.explainIssue("Missing table name");
+
+            result.append(" Missing table name\n");
+            result.append(explanation).append("\n\n");
         }
 
-        if(request.getOwner() == null || request.getOwner().isEmpty()) {
 
-            String explanation = aiService.explainIssue("Missing owner");
+        if (request.getOwner() == null || request.getOwner().isEmpty()) {
 
-            return "Deployment Blocked: Missing owner\n " + explanation;
+            score -= 40;
+
+            String explanation =
+                    aiService.explainIssue("Missing owner");
+
+            result.append(" Missing owner\n");
+            result.append(explanation).append("\n\n");
         }
 
-        return "Deployment Allowed";
+
+        if (request.getTable() != null) {
+
+            String table = request.getTable().toLowerCase();
+
+            if (table.contains("payment") ||
+                    table.contains("salary") ||
+                    table.contains("customer")) {
+
+                score -= 10;
+
+                result.append(" Sensitive data detected\n\n");
+            }
+        }
+
+
+        result.insert(0,
+                "Metadata Health Score: "
+                        + score + "/100\n\n");
+
+
+        if (score == 100) {
+
+            result.append(" Deployment Allowed");
+        }
+
+        return result.toString();
     }
 }
