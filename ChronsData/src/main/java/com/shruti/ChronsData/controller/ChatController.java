@@ -84,9 +84,9 @@ public class ChatController {
         }
 
 
-        result.insert(0,
-                "Metadata Health Score: "
-                        + score + "/100\n\n");
+        result.append("\n Metadata Health Score: ")
+                .append(score)
+                .append("/100\n\n");
 
 
         if (score == 100) {
