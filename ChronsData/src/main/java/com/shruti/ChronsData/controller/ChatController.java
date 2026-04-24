@@ -30,7 +30,7 @@ public class ChatController {
         String owner = metadataService.getOwner(tableName);
 
 
-        if(owner.equals("Unknown")) {
+        if (owner.equals("Unknown")) {
             return "I couldn’t find that table.";
         }
 
@@ -44,31 +44,23 @@ public class ChatController {
 
         StringBuilder result = new StringBuilder();
 
-
+        // Missing table name
         if (request.getTable() == null || request.getTable().isEmpty()) {
 
             score -= 50;
 
-            String explanation =
-                    aiService.explainIssue("Missing table name");
-
-            result.append(" Missing table name\n");
-            result.append(explanation).append("\n\n");
+            result.append(" Missing table name\n\n");
         }
 
-
+        // Missing owner
         if (request.getOwner() == null || request.getOwner().isEmpty()) {
 
             score -= 40;
 
-            String explanation =
-                    aiService.explainIssue("Missing owner");
-
-            result.append(" Missing owner\n");
-            result.append(explanation).append("\n\n");
+            result.append(" Missing owner\n\n");
         }
 
-
+        // Sensitive data detection
         if (request.getTable() != null) {
 
             String table = request.getTable().toLowerCase();
@@ -83,17 +75,19 @@ public class ChatController {
             }
         }
 
-
-        result.append("\n Metadata Health Score: ")
-                .append(score)
-                .append("/100\n\n");
-
+        // Final response
+        String finalResult =
+                " Metadata Health Score: "
+                        + score
+                        + "/100\n\n"
+                        + result.toString();
 
         if (score == 100) {
-
-            result.append(" Deployment Allowed");
+            finalResult += " Deployment Allowed";
+        } else {
+            finalResult += " Deployment Blocked";
         }
 
-        return result.toString();
+        return finalResult;
     }
 }

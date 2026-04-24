@@ -159,7 +159,7 @@
         .response {
             margin-top: 15px;
             font-size: 0.9rem;
-            color: #38bdf8;
+            color: #000080;
             font-weight: 500;
         }
 
@@ -172,6 +172,13 @@
             from { opacity: 0; transform: translateX(10px); }
             to { opacity: 1; transform: translateX(0); }
         }
+        #validationResponse {
+         margin-top: 15px;
+         padding: 12px;
+         border-radius: 10px;
+         background: #f4f4f4;
+         line-height: 1.6;
+       }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
@@ -241,7 +248,8 @@
         })
         .then(res => res.text())
         .then(data => {
-            document.getElementById("validationResponse").innerText = data;
+            document.getElementById("validationResponse").innerHTML =
+            data.replace(/\n/g, "<br>");
         });
     }
 </script>
